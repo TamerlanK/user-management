@@ -90,7 +90,7 @@
               <th
                 class="px-6 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Delete
+                Actions
               </th>
             </tr>
           </thead>
@@ -118,6 +118,7 @@
         </button>
       </div>
     </div>
+    <!-- ADD USER MODAL -->
     <div
       id="add-user-modal"
       class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm hidden"
@@ -204,7 +205,7 @@
             <div class="flex justify-end">
               <button
                 type="button"
-                id="close-modal-button"
+                id="close-add-modal-button"
                 class="mr-2 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600"
               >
                 Cancel
@@ -220,5 +221,108 @@
         </div>
       </div>
     </div>
+    <!-- EDIT USER MODAL -->
+    <div
+    id="edit-user-modal"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm hidden"
+  >
+    <div class="flex justify-center items-center h-full">
+      <div class="bg-white rounded-lg shadow-lg max-w-xl w-full p-6">
+        <h2 class="text-xl text-center font-bold mb-4">Edit User</h2>
+        <form id="edit-user-form" class="text-sm">
+          <div class="mb-4">
+            <label for="name" class="block text-gray-700">Name</label>
+            <input
+              type="text"
+              id="edit-name"
+              name="edit-name"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="address" class="block text-gray-700">Address</label>
+            <input
+              type="text"
+              id="edit-address"
+              name="edit-address"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="email" class="block text-gray-700">Email</label>
+            <input
+              type="email"
+              id="edit-email"
+              name="edit-email"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="phone_number" class="block text-gray-700"
+              >Phone Number</label
+            >
+            <input
+              type="text"
+              id="edit-phone_number"
+              name="edit-phone_number"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="job" class="block text-gray-700">Job</label>
+            <input
+              type="text"
+              id="edit-job"
+              name="edit-job"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="company" class="block text-gray-700">Company</label>
+            <input
+              type="text"
+              id="edit-company"
+              name="edit-company"
+              class="w-full px-4 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="birthdate" class="block text-gray-700"
+              >Birthdate</label
+            >
+            <input
+              type="date"
+              id="edit-birthdate"
+              name="edit-birthdate"
+              class="w-full px-4 py-2 border rounded-lg"
+
+              required
+            />
+          </div>
+          <div class="flex justify-end">
+            <button
+              type="button"
+              id="close-edit-modal-button"
+              class="mr-2 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-slate-800 text-white rounded-lg font-semibold hover:bg-slate-900"
+            >
+              Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   </body>
 </html>

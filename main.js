@@ -132,8 +132,8 @@ function populateTable(users) {
       tr.appendChild(td)
     })
 
-    const deleteTd = document.createElement("td")
-    deleteTd.classList.add("p-3", "text-center")
+    const actionsRow = document.createElement("td")
+    actionsRow.classList.add("p-3", "text-center", "space-x-3")
 
     const deleteButton = document.createElement("button")
     deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`
@@ -145,11 +145,24 @@ function populateTable(users) {
       "rounded-lg",
       "hover:bg-red-700"
     )
-
     deleteButton.addEventListener("click", () => deleteUser(user.id))
 
-    deleteTd.appendChild(deleteButton)
-    tr.appendChild(deleteTd)
+    const editButton = document.createElement("button")
+    editButton.innerHTML = `<i class="fa-solid fa-pen"></i>`
+    editButton.classList.add(
+      "p-2",
+      "text-xs",
+      "bg-slate-800",
+      "text-white",
+      "rounded-lg",
+      "hover:bg-slate-900"
+    )
+    editButton.addEventListener("click", () => {})
+
+    actionsRow.appendChild(deleteButton)
+    actionsRow.appendChild(editButton)
+
+    tr.appendChild(actionsRow)
 
     tableBody.appendChild(tr)
   })
@@ -227,17 +240,19 @@ async function addUserToServer(user) {
     .catch((error) => alert("Failed to add user"))
 }
 
-const modal = document.getElementById("add-user-modal")
+const addUserModal = document.getElementById("add-user-modal")
 const addUserButton = document.getElementById("add-user-button")
 const addUserForm = document.getElementById("add-user-form")
-const closeModalButton = document.getElementById("close-modal-button")
+const closeAddModalButton = document.getElementById("close-add-modal-button")
 
 addUserButton.addEventListener("click", () => {
-  modal.classList.remove("hidden")
+  addUserModal.classList.remove("hidden")
+  document.body.classList.add("overflow-hidden")
 })
 
-closeModalButton.addEventListener("click", () => {
-  modal.classList.add("hidden")
+closeAddModalButton.addEventListener("click", () => {
+  addUserModal.classList.add("hidden")
+  document.body.classList.remove("overflow-hidden")
 })
 
 addUserForm.addEventListener("submit", async (e) => {
@@ -254,7 +269,7 @@ addUserForm.addEventListener("submit", async (e) => {
   }
 
   await addUserToServer(user).then(() => {
-    modal.classList.add("hidden")
+    addUserModal.classList.add("hidden")
     addUserForm.reset()
   })
 })
