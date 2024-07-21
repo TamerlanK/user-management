@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Management</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="main.js" defer></script>
   </head>
@@ -20,7 +27,7 @@
         />
       </div>
       <div class="overflow-x-auto">
-        <table class="min-w-full bg-white divide-y divide-gray-200">
+        <table class="min-w-full bg-white divide-y divide-gray-200 border">
           <thead class="bg-gray-50">
             <tr>
               <th
@@ -62,6 +69,12 @@
                 class="px-6 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 Retired
+              </th>
+
+              <th
+                class="px-6 py-3 border text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
+                Delete
               </th>
             </tr>
           </thead>

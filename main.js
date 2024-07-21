@@ -26,8 +26,9 @@ class Person {
 }
 
 class User extends Person {
-  constructor(name, address, email, phone_number, job, company, birthdate) {
+  constructor(id, name, address, email, phone_number, job, company, birthdate) {
     super(name, address, email, phone_number, birthdate)
+    this.id = id
     this.job = job
     this.company = company
     this.isRetired = this.age > 65
@@ -64,8 +65,18 @@ function fetchData() {
 
 function convertDataToUsers(data) {
   return data.map((user) => {
-    const { name, address, email, phone_number, job, company, birthdate } = user
-    return new User(name, address, email, phone_number, job, company, birthdate)
+    const { id, name, address, email, phone_number, job, company, birthdate } =
+      user
+    return new User(
+      id,
+      name,
+      address,
+      email,
+      phone_number,
+      job,
+      company,
+      birthdate
+    )
   })
 }
 
@@ -92,9 +103,8 @@ function populateTable(users) {
     const tr = document.createElement("tr")
 
     const td = document.createElement("td")
-    td.colSpan = tableHeaders.length
-
-    td.textContent = "No results found"
+    td.colSpan = tableHeaders.length + 1
+    td.textContent = `No results found for "${searchTerm}"`
     td.classList.add("p-5", "border", "text-center", "text-gray-500")
 
     tr.appendChild(td)
@@ -121,6 +131,25 @@ function populateTable(users) {
       tr.appendChild(td)
     })
 
+    const deleteTd = document.createElement("td")
+    deleteTd.classList.add("p-3", "text-center")
+
+    const deleteButton = document.createElement("button")
+    deleteButton.innerHTML = `<i class="fa-solid fa-trash"></i>`
+    deleteButton.classList.add(
+      "p-2",
+      "text-xs",
+      "bg-red-600",
+      "text-white",
+      "rounded-lg",
+      "hover:bg-red-700"
+    )
+    
+    deleteButton.addEventListener("click", () => deleteUser(user.id))
+
+    deleteTd.appendChild(deleteButton)
+    tr.appendChild(deleteTd)
+
     tableBody.appendChild(tr)
   })
 }
@@ -145,33 +174,39 @@ function updatePaginationInfo(totalPages) {
   paginationInfo.textContent = `Page ${currentPage} of ${totalPages}`
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetchData()
+function deleteUser(userId) {
+  allUsers = allUsers.filter((user) => user.id !== userId)
+  updateTable()
+}
 
-  const searchInput = document.getElementById("search-input")
-  searchInput.addEventListener("input", (event) => {
-    searchTerm = event.target.value.toLowerCase()
-    currentPage = 1
-    updateTable()
+function deleteFromServer(userId) {
+  const url = `http://localhost:3000/persons/${userId}`
+  fetch(url, {
+    method: "DELETE",
   })
+    .then((res) => {
+      if (!res.ok) {
+        alert("Network response was not ok")
+      }
+      alert("User deleted successfully")
+    })
+    .catch((error) => alert("Failed to delete user"))
+}
 
-  const previousButton = document.getElementById("previous-button")
-  const nextButton = document.getElementById("next-button")
-
-  previousButton.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--
-      updateTable()
-    }
-  })
-
-  nextButton.addEventListener("click", () => {
-    const totalPages = Math.ceil(
-      filterUsers(searchTerm).length / USERS_PER_PAGE
-    )
-    if (currentPage < totalPages) {
-      currentPage++
-      updateTable()
-    }
-  })
+document.getElementById("search-input").addEventListener("input", (e) => {
+  searchTerm = e.target.value.trim().toLowerCase()
+  currentPage = 1
+  updateTable()
 })
+
+document.getElementById("previous-button").addEventListener("click", () => {
+  currentPage--
+  updateTable()
+})
+
+document.getElementById("next-button").addEventListener("click", () => {
+  currentPage++
+  updateTable()
+})
+
+fetchData()
