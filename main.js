@@ -51,7 +51,7 @@ let currentPage = 1
 const USERS_PER_PAGE = 10
 
 function fetchData() {
-  const url = "https://api.npoint.io/9cda598e0693b49ef1eb"
+  const url = "http://localhost:3000/persons"
 
   fetch(url)
     .then((res) => res.json())
