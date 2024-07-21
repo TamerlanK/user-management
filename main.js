@@ -93,6 +93,7 @@ function updateTable() {
 
   populateTable(paginatedUsers)
   updatePaginationInfo(totalPages)
+  updateUserCount()
 }
 
 function populateTable(users) {
@@ -144,7 +145,7 @@ function populateTable(users) {
       "rounded-lg",
       "hover:bg-red-700"
     )
-    
+
     deleteButton.addEventListener("click", () => deleteUser(user.id))
 
     deleteTd.appendChild(deleteButton)
@@ -174,8 +175,20 @@ function updatePaginationInfo(totalPages) {
   paginationInfo.textContent = `Page ${currentPage} of ${totalPages}`
 }
 
+function updateUserCount() {
+  document.getElementById(
+    "users-count"
+  ).textContent = `(${allUsers.length} users)`
+}
+
 function deleteUser(userId) {
   allUsers = allUsers.filter((user) => user.id !== userId)
+  updateTable()
+  deleteFromServer(userId)
+}
+
+function addUser(newUser) {
+  allUsers.push(convertDataToUsers([newUser])[0])
   updateTable()
 }
 
@@ -192,6 +205,59 @@ function deleteFromServer(userId) {
     })
     .catch((error) => alert("Failed to delete user"))
 }
+
+async function addUserToServer(user) {
+  const url = "http://localhost:3000/persons"
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Network error!")
+      }
+      return res.json()
+    })
+    .then((newUser) => {
+      addUser(newUser)
+    })
+    .catch((error) => alert("Failed to add user"))
+}
+
+const modal = document.getElementById("add-user-modal")
+const addUserButton = document.getElementById("add-user-button")
+const addUserForm = document.getElementById("add-user-form")
+const closeModalButton = document.getElementById("close-modal-button")
+
+addUserButton.addEventListener("click", () => {
+  modal.classList.remove("hidden")
+})
+
+closeModalButton.addEventListener("click", () => {
+  modal.classList.add("hidden")
+})
+
+addUserForm.addEventListener("submit", async (e) => {
+  e.preventDefault()
+  const formData = new FormData(addUserForm)
+  const user = {
+    name: formData.get("name"),
+    address: formData.get("address"),
+    email: formData.get("email"),
+    phone_number: formData.get("phone_number"),
+    job: formData.get("job"),
+    company: formData.get("company"),
+    birthdate: formData.get("birthdate"),
+  }
+
+  await addUserToServer(user).then(() => {
+    modal.classList.add("hidden")
+    addUserForm.reset()
+  })
+})
 
 document.getElementById("search-input").addEventListener("input", (e) => {
   searchTerm = e.target.value.trim().toLowerCase()
