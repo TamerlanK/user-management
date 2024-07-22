@@ -157,7 +157,7 @@ function populateTable(users) {
       "rounded-lg",
       "hover:bg-slate-900"
     )
-    editButton.addEventListener("click", () => {})
+    editButton.addEventListener("click", () => openEditModal(user))
 
     actionsRow.appendChild(deleteButton)
     actionsRow.appendChild(editButton)
@@ -167,6 +167,91 @@ function populateTable(users) {
     tableBody.appendChild(tr)
   })
 }
+
+function openEditModal(user) {
+  document.getElementById('edit-id').value = user.id
+  document.getElementById("edit-name").value = user.name
+  document.getElementById("edit-address").value = user.address
+  document.getElementById("edit-email").value = user.email
+  document.getElementById("edit-phone_number").value = user.phone_number
+  document.getElementById("edit-job").value = user.job
+  document.getElementById("edit-company").value = user.company
+  document.getElementById("edit-birthdate").value = user.birthdate.split("T")[0]
+
+  document.getElementById("edit-user-modal").classList.remove("hidden")
+  document.body.classList.add("overflow-hidden")
+}
+
+function editUser(updatedUser) {
+  allUsers = allUsers.map((user) =>
+    user.id === updatedUser.id
+      ? {
+          id: updatedUser.id,
+          name: updatedUser.name,
+          address: updatedUser.address,
+          email: updatedUser.email,
+          phone_number: updatedUser.phone_number,
+          job: updatedUser.job,
+          company: updatedUser.company,
+          birthdate: updatedUser.birthdate,
+        }
+      : user
+  )
+  updateTable()
+}
+
+async function updateUserOnServer(user) {
+  const url = `http://localhost:3000/persons/${user.id}`
+  return fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Network error!")
+      }
+      return res.json()
+    })
+    .then((updatedUser) => {
+      console.log(`Updated user: ${updatedUser}`)
+      editUser(updatedUser)
+    })
+    .catch((error) => alert("Failed to update user"))
+}
+
+const editUserModal = document.getElementById("edit-user-modal")
+const editUserForm = document.getElementById("edit-user-form")
+const closeEditModalButton = document.getElementById("close-edit-modal-button")
+
+closeEditModalButton.addEventListener("click", () => {
+  editUserModal.classList.add("hidden")
+  document.body.classList.remove("overflow-hidden")
+})
+
+editUserForm.addEventListener("submit", async (e) => {
+  e.preventDefault()
+  const formData = new FormData(editUserForm)
+
+  const user = {
+    id: formData.get("edit-id"),
+    name: formData.get("edit-name"),
+    address: formData.get("edit-address"),
+    email: formData.get("edit-email"),
+    phone_number: formData.get("edit-phone_number"),
+    job: formData.get("edit-job"),
+    company: formData.get("edit-company"),
+    birthdate: formData.get("edit-birthdate"),
+  }
+
+  await updateUserOnServer(user).then(() => {
+    editUserModal.classList.add("hidden")
+    editUserForm.reset()
+    document.body.classList.remove("overflow-hidden")
+  })
+})
 
 function filterUsers(searchTerm) {
   return allUsers.filter((user) => {
